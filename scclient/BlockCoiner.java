@@ -6,6 +6,7 @@ package net.minecraft.src;
 
 import java.util.Random;
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.forge.*;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockContainer, Material, mod_ServerCurrency, Block, 
@@ -41,7 +42,7 @@ public class BlockCoiner extends BlockContainer
 
     private void setDefaultDirection(World world, int i, int j, int k)
     {
-        if(world.multiplayerWorld)
+        if(world.isRemote)
         {
             return;
         }
@@ -114,16 +115,22 @@ public class BlockCoiner extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.multiplayerWorld)
+        if(world.isRemote)
         {
             return true;
         }
         TileEntityCoiner tileentitycoiner = (TileEntityCoiner)world.getBlockTileEntity(i, j, k);
         if(tileentitycoiner != null)
         {
-            ModLoader.OpenGUI(ModLoader.getMinecraftInstance().thePlayer, new GuiCoiner(ModLoader.getMinecraftInstance().thePlayer.inventory, tileentitycoiner));
-        }
+        	TileEntityCoiner var6 = (TileEntityCoiner)var1.getBlockTileEntity(var2, var3, var4);
+
+            if (var6 != null)
+            {
+                var5.openGui(mod_ServerCurrency.instance, 145, var1, var2, var3, var4);
+            }
+
         return true;
+        }
     }
 
     public TileEntity getBlockEntity()

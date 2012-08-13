@@ -5,6 +5,10 @@
 package net.minecraft.src;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.forge.*;
+
+
+
 
 // Referenced classes of package net.minecraft.src:
 //            BaseModMp, ModLoader, Item, ItemStack, 
@@ -12,7 +16,7 @@ import net.minecraft.client.Minecraft;
 //            GuiCoiner, EntityPlayerSP, Achievement, BlockCoiner, 
 //            GuiScreen
 
-public class mod_ServerCurrency extends BaseModMp
+public class mod_ServerCurrency extends NetworkMod
 {
 
     public static int stoneBlankID;
@@ -26,7 +30,7 @@ public class mod_ServerCurrency extends BaseModMp
     public static int ironDieID;
     public static int diamondDieID;
     public static int coinerID = 200;
-    public static int coinerGUI = 98;
+ //   public static int coinerGUI = 98;
     public static final Item stoneBlank;
     public static final Item ironBlank;
     public static final Item goldBlank;
@@ -41,25 +45,28 @@ public class mod_ServerCurrency extends BaseModMp
     public static final String version = "v0.5.2";
     public static final Achievement currency;
     public static int coinfront = ModLoader.addOverride("/terrain.png", "/ServerCurrency/Coiner/coinidle.png");
-
-    public mod_ServerCurrency()
-    {
-    }
+  	public static mod_ServerCurrency instance;
+        
+      	public mod_ServerCurrency()
+        {
+         instance = this;
+        }
+      	
 
     public void load()
     {
-        ModLoader.RegisterBlock(coiner);
-        ModLoader.AddName(dupondius, "Quincunx");
-        ModLoader.AddName(denarius, "Denarii");
-        ModLoader.AddName(aureus, "Aureus");
-        ModLoader.AddName(stoneBlank, "Stone Blank");
-        ModLoader.AddName(ironBlank, "Iron Blank");
-        ModLoader.AddName(goldBlank, "Gold Blank");
-        ModLoader.AddName(woodDie, "Wooden Die");
-        ModLoader.AddName(stoneDie, "Stone Die");
-        ModLoader.AddName(ironDie, "Iron Die");
-        ModLoader.AddName(diamondDie, "Diamond Die");
-        ModLoader.AddName(coiner, "Coining Mint");
+        ModLoader.registerBlock(coiner);
+        ModLoader.addName(dupondius, "Quincunx");
+        ModLoader.addName(denarius, "Denarii");
+        ModLoader.addName(aureus, "Aureus");
+        ModLoader.addName(stoneBlank, "Stone Blank");
+        ModLoader.addName(ironBlank, "Iron Blank");
+        ModLoader.addName(goldBlank, "Gold Blank");
+        ModLoader.addName(woodDie, "Wooden Die");
+        ModLoader.addName(stoneDie, "Stone Die");
+        ModLoader.addName(ironDie, "Iron Die");
+        ModLoader.addName(diamondDie, "Diamond Die");
+        ModLoader.addName(coiner, "Coining Mint");
         stoneBlank.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/blankbronze.png");
         ironBlank.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/blankiron.png");
         goldBlank.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/blankgold.png");
@@ -70,37 +77,38 @@ public class mod_ServerCurrency extends BaseModMp
         stoneDie.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/stonedie.png");
         ironDie.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/irondie.png");
         diamondDie.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/diamonddie.png");
-        ModLoader.AddRecipe(new ItemStack(coiner, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(coiner, 1), new Object[] {
             "WDW", "IPI", "III", Character.valueOf('I'), Item.ingotIron, Character.valueOf('W'), Block.planks, Character.valueOf('P'), Block.pistonBase, Character.valueOf('D'), 
             ironDie
         });
-        ModLoader.AddRecipe(new ItemStack(stoneBlank, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(stoneBlank, 1), new Object[] {
             " C ", "C C", " C ", Character.valueOf('C'), Block.cobblestone
         });
-        ModLoader.AddRecipe(new ItemStack(ironBlank, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(ironBlank, 1), new Object[] {
             " I ", "I I", " I ", Character.valueOf('I'), Item.ingotIron
         });
-        ModLoader.AddRecipe(new ItemStack(goldBlank, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(goldBlank, 1), new Object[] {
             " G ", "G G", " G ", Character.valueOf('G'), Item.ingotGold
         });
-        ModLoader.AddRecipe(new ItemStack(woodDie, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(woodDie, 1), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Block.planks
         });
-        ModLoader.AddRecipe(new ItemStack(stoneDie, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(stoneDie, 1), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Block.cobblestone
         });
-        ModLoader.AddRecipe(new ItemStack(stoneDie, 3), new Object[] {
+        ModLoader.addRecipe(new ItemStack(stoneDie, 3), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(ironDie, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(ironDie, 1), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Item.ingotIron
         });
-        ModLoader.AddRecipe(new ItemStack(diamondDie, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(diamondDie, 1), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Item.diamond
         });
-        ModLoader.AddAchievementDesc(currency, "SMP Currency!", "Get Paid.");
-        ModLoader.RegisterTileEntity(net.minecraft.src.TileEntityCoiner.class, "Coiner");
-        ModLoaderMp.RegisterGUI(this, coinerGUI);
+        ModLoader.addAchievementDesc(currency, "SMP Currency!", "Get Paid.");
+        ModLoader.registerTileEntity(net.minecraft.src.TileEntityCoiner.class, "Coiner");
+        MinecraftForge.setGuiHandler(instance, new GuiHandlerCurrency());
+ //       ModLoader.RegisterGUI(this, coinerGUI);
     }
 
     public void OnItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
@@ -122,16 +130,6 @@ public class mod_ServerCurrency extends BaseModMp
         }
     }
 
-    public GuiScreen HandleGUI(int i)
-    {
-        if(i == coinerGUI)
-        {
-            return new GuiCoiner(ModLoader.getMinecraftInstance().thePlayer.inventory, new TileEntityCoiner());
-        } else
-        {
-            return null;
-        }
-    }
 
     public String getVersion()
     {
@@ -140,16 +138,16 @@ public class mod_ServerCurrency extends BaseModMp
 
     static 
     {
-        stoneBlankID = 1080;
-        ironBlockID = 1081;
-        goldBlankID = 1082;
-        quincunxID = 1083;
-        denariID = 1084;
-        aureusID = 1085;
-        woodDieID = 1086;
-        stoneDieID = 1087;
-        ironDieID = 1088;
-        diamondDieID = 1089;
+        stoneBlankID = 10800;
+        ironBlockID = 10810;
+        goldBlankID = 10820;
+        quincunxID = 10830;
+        denariID = 10840;
+        aureusID = 10850;
+        woodDieID = 10860;
+        stoneDieID = 10870;
+        ironDieID = 10880;
+        diamondDieID = 10890;
         stoneBlank = (new Item(stoneBlankID + 256)).setItemName("stoneBlank");
         ironBlank = (new Item(ironBlockID + 256)).setItemName("ironBlank");
         goldBlank = (new Item(goldBlankID + 256)).setItemName("goldBlank");
