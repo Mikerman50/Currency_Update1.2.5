@@ -6,7 +6,6 @@ package net.minecraft.src;
 
 import java.util.Random;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.forge.*;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockContainer, Material, mod_ServerCurrency, Block, 
@@ -122,15 +121,9 @@ public class BlockCoiner extends BlockContainer
         TileEntityCoiner tileentitycoiner = (TileEntityCoiner)world.getBlockTileEntity(i, j, k);
         if(tileentitycoiner != null)
         {
-        	TileEntityCoiner var6 = (TileEntityCoiner)var1.getBlockTileEntity(var2, var3, var4);
-
-            if (var6 != null)
-            {
-                var5.openGui(mod_ServerCurrency.instance, 145, var1, var2, var3, var4);
-            }
-
-        return true;
+            ModLoader.openGUI(ModLoader.getMinecraftInstance().thePlayer, new GuiCoiner(ModLoader.getMinecraftInstance().thePlayer.inventory, tileentitycoiner));
         }
+        return true;
     }
 
     public TileEntity getBlockEntity()
@@ -159,48 +152,46 @@ public class BlockCoiner extends BlockContainer
         }
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    public void onBlockRemoval(World var1, int var2, int var3, int var4)
     {
-        if(!keepCoinerInventory)
-        {
-            TileEntityCoiner tileentitycoiner = (TileEntityCoiner)world.getBlockTileEntity(i, j, k);
-            if(tileentitycoiner != null)
-            {
-label0:
-                for(int l = 0; l < tileentitycoiner.getSizeInventory(); l++)
-                {
-                    ItemStack itemstack = tileentitycoiner.getStackInSlot(l);
-                    if(itemstack == null)
-                    {
-                        continue;
-                    }
-                    float f = coinerRand.nextFloat() * 0.8F + 0.1F;
-                    float f1 = coinerRand.nextFloat() * 0.8F + 0.1F;
-                    float f2 = coinerRand.nextFloat() * 0.8F + 0.1F;
-                    do
-                    {
-                        if(itemstack.stackSize <= 0)
-                        {
-                            continue label0;
-                        }
-                        int i1 = coinerRand.nextInt(21) + 10;
-                        if(i1 > itemstack.stackSize)
-                        {
-                            i1 = itemstack.stackSize;
-                        }
-                        itemstack.stackSize -= i1;
-                        EntityItem entityitem = new EntityItem(world, (float)i + f, (float)j + f1, (float)k + f2, new ItemStack(itemstack.itemID, i1, itemstack.getItemDamage()));
-                        float f3 = 0.05F;
-                        entityitem.motionX = (float)coinerRand.nextGaussian() * f3;
-                        entityitem.motionY = (float)coinerRand.nextGaussian() * f3 + 0.2F;
-                        entityitem.motionZ = (float)coinerRand.nextGaussian() * f3;
-                        world.entityJoinedWorld(entityitem);
-                    } while(true);
-                }
+     TileEntityCoiner var5 = (TileEntityCoiner)var1.getBlockTileEntity(var2, var3, var4);
 
+        if (var5 != null)
+        {
+            for (int var6 = 0; var6 < var5.getSizeInventory(); ++var6)
+            {
+                ItemStack var7 = var5.getStackInSlot(var6);
+
+                if (var7 != null)
+                {
+                    float var8 = this.coinerRand.nextFloat() * 0.8F + 0.1F;
+                    float var9 = this.coinerRand.nextFloat() * 0.8F + 0.1F;
+                    EntityItem var12;
+
+                    for (float var10 = this.coinerRand.nextFloat() * 0.8F + 0.1F; var7.stackSize > 0; var1.spawnEntityInWorld(var12))
+                    {
+                        int var11 = this.coinerRand.nextInt(21) + 10;
+
+                        if (var11 > var7.stackSize)
+                        {
+                            var11 = var7.stackSize;
+                        }
+
+                        var7.stackSize -= var11;
+                        var12 = new EntityItem(var1, (double)((float)var2 + var8), (double)((float)var3 + var9), (double)((float)var4 + var10), new ItemStack(var7.itemID, var11, var7.getItemDamage()));
+                        float var13 = 0.05F;
+                        var12.motionX = (double)((float)this.coinerRand.nextGaussian() * var13);
+                        var12.motionY = (double)((float)this.coinerRand.nextGaussian() * var13 + 0.2F);
+                        var12.motionZ = (double)((float)this.coinerRand.nextGaussian() * var13);
+
+                        if (var7.hasTagCompound())
+                        {
+                            var12.item.setTagCompound((NBTTagCompound)var7.getTagCompound().copy());
+                        }
+                    }
+                }
             }
         }
-        super.onBlockRemoval(world, i, j, k);
-    }
 
-}
+        super.onBlockRemoval(var1, var2, var3, var4);
+    }}
