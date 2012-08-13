@@ -1,11 +1,37 @@
+// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
+// Jad home page: http://www.kpdus.com/jad.html
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
-public class CoinerRecipes {
+package net.minecraft.src;
 
-   public static dk getSmeltingResult(int i, int j) {
-      return getOutput(i, j);
-   }
 
-   private static dk getOutput(int i, int j) {
-      return i == mod_ServerCurrency.ironBlank.bM && (j == mod_ServerCurrency.woodDie.bM || j == mod_ServerCurrency.stoneDie.bM || j == mod_ServerCurrency.ironDie.bM || j == mod_ServerCurrency.diamondDie.bM)?new dk(mod_ServerCurrency.denarius, 1):(i == mod_ServerCurrency.goldBlank.bM && (j == mod_ServerCurrency.woodDie.bM || j == mod_ServerCurrency.stoneDie.bM || j == mod_ServerCurrency.ironDie.bM || j == mod_ServerCurrency.diamondDie.bM)?new dk(mod_ServerCurrency.aureus, 1):mod_ServerCurrency.getOutPut(i, j));
-   }
+// Referenced classes of package net.minecraft.src:
+//            mod_ServerCurrency, Item, ItemStack
+
+public class CoinerRecipes
+{
+
+    public CoinerRecipes()
+    {
+    }
+
+    public static ItemStack getSmeltingResult(int i, int j)
+    {
+        return getOutput(i, j);
+    }
+
+    private static ItemStack getOutput(int i, int j)
+    {
+        if(i == mod_ServerCurrency.ironBlank.shiftedIndex && (j == mod_ServerCurrency.woodDie.shiftedIndex || j == mod_ServerCurrency.stoneDie.shiftedIndex || j == mod_ServerCurrency.ironDie.shiftedIndex || j == mod_ServerCurrency.diamondDie.shiftedIndex))
+        {
+            return new ItemStack(mod_ServerCurrency.denarius, 1);
+        }
+        if(i == mod_ServerCurrency.goldBlank.shiftedIndex && (j == mod_ServerCurrency.woodDie.shiftedIndex || j == mod_ServerCurrency.stoneDie.shiftedIndex || j == mod_ServerCurrency.ironDie.shiftedIndex || j == mod_ServerCurrency.diamondDie.shiftedIndex))
+        {
+            return new ItemStack(mod_ServerCurrency.aureus, 1);
+        } else
+        {
+            return mod_ServerCurrency.getOutPut(i, j);
+        }
+    }
 }

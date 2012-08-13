@@ -1,212 +1,315 @@
+// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
+// Jad home page: http://www.kpdus.com/jad.html
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
-public class TileEntityCoiner extends bq implements de {
-
-   private dk[] coinerItemStacks = new dk[4];
-   public int coinerBurnTime = 0;
-   public int currentItemBurnTime = 0;
-   public int coinerCookTime = 0;
-   public ia entity;
+package net.minecraft.src;
 
 
-   public int c() {
-      return this.coinerItemStacks.length;
-   }
+// Referenced classes of package net.minecraft.src:
+//            TileEntity, IInventory, ItemStack, NBTTagCompound, 
+//            NBTTagList, World, Item, CoinerRecipes, 
+//            EntityLiving, Block, Material, EntityPlayer, 
+//            Entity
 
-   public dk d(int i) {
-      return this.coinerItemStacks[i];
-   }
+public class TileEntityCoiner extends TileEntity
+    implements IInventory
+{
 
-   public dk a(int i, int j) {
-      if(this.coinerItemStacks[i] != null) {
-         dk itemstack1;
-         if(this.coinerItemStacks[i].a <= j) {
-            itemstack1 = this.coinerItemStacks[i];
-            this.coinerItemStacks[i] = null;
+    private ItemStack coinerItemStacks[];
+    public int coinerBurnTime;
+    public int currentItemBurnTime;
+    public int coinerCookTime;
+    public Entity entity;
+
+    public TileEntityCoiner()
+    {
+        coinerItemStacks = new ItemStack[4];
+        coinerBurnTime = 0;
+        currentItemBurnTime = 0;
+        coinerCookTime = 0;
+    }
+
+    public int getSizeInventory()
+    {
+        return coinerItemStacks.length;
+    }
+
+    public ItemStack getStackInSlot(int i)
+    {
+        return coinerItemStacks[i];
+    }
+
+    public ItemStack decrStackSize(int i, int j)
+    {
+        if(coinerItemStacks[i] != null)
+        {
+            if(coinerItemStacks[i].stackSize <= j)
+            {
+                ItemStack itemstack = coinerItemStacks[i];
+                coinerItemStacks[i] = null;
+                return itemstack;
+            }
+            ItemStack itemstack1 = coinerItemStacks[i].splitStack(j);
+            if(coinerItemStacks[i].stackSize == 0)
+            {
+                coinerItemStacks[i] = null;
+            }
             return itemstack1;
-         } else {
-            itemstack1 = this.coinerItemStacks[i].a(j);
-            if(this.coinerItemStacks[i].a == 0) {
-               this.coinerItemStacks[i] = null;
+        } else
+        {
+            return null;
+        }
+    }
+
+    public void setInventorySlotContents(int i, ItemStack itemstack)
+    {
+        coinerItemStacks[i] = itemstack;
+        if(itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+        {
+            itemstack.stackSize = getInventoryStackLimit();
+        }
+    }
+
+    public String getInvName()
+    {
+        return "Coiner";
+    }
+
+    public void readFromNBT(NBTTagCompound nbttagcompound)
+    {
+        super.readFromNBT(nbttagcompound);
+        NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
+        coinerItemStacks = new ItemStack[getSizeInventory()];
+        for(int i = 0; i < nbttaglist.tagCount(); i++)
+        {
+            NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
+            byte byte0 = nbttagcompound1.getByte("Slot");
+            if(byte0 >= 0 && byte0 < coinerItemStacks.length)
+            {
+                coinerItemStacks[byte0] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
             }
+        }
 
-            return itemstack1;
-         }
-      } else {
-         return null;
-      }
-   }
+        coinerBurnTime = nbttagcompound.getShort("BurnTime");
+        coinerCookTime = nbttagcompound.getShort("CookTime");
+        currentItemBurnTime = getItemBurnTime(coinerItemStacks[2]);
+    }
 
-   public void a(int i, dk itemstack) {
-      this.coinerItemStacks[i] = itemstack;
-      if(itemstack != null && itemstack.a > this.e()) {
-         itemstack.a = this.e();
-      }
-
-   }
-
-   public String d() {
-      return "Coiner";
-   }
-
-   public void b(ik nbttagcompound) {
-      super.b(nbttagcompound);
-      yi nbttaglist = nbttagcompound.l("Items");
-      this.coinerItemStacks = new dk[this.c()];
-
-      for(int i = 0; i < nbttaglist.c(); ++i) {
-         ik nbttagcompound1 = (ik)nbttaglist.a(i);
-         byte byte0 = nbttagcompound1.c("Slot");
-         if(byte0 >= 0 && byte0 < this.coinerItemStacks.length) {
-            this.coinerItemStacks[byte0] = dk.a(nbttagcompound1);
-         }
-      }
-
-      this.coinerBurnTime = nbttagcompound.d("BurnTime");
-      this.coinerCookTime = nbttagcompound.d("CookTime");
-      this.currentItemBurnTime = this.getItemBurnTime(this.coinerItemStacks[2]);
-   }
-
-   public void a(ik nbttagcompound) {
-      super.a(nbttagcompound);
-      nbttagcompound.a("BurnTime", (short)this.coinerBurnTime);
-      nbttagcompound.a("CookTime", (short)this.coinerCookTime);
-      yi nbttaglist = new yi();
-
-      for(int i = 0; i < this.coinerItemStacks.length; ++i) {
-         if(this.coinerItemStacks[i] != null) {
-            ik nbttagcompound1 = new ik();
-            nbttagcompound1.a("Slot", (byte)i);
-            this.coinerItemStacks[i].b(nbttagcompound1);
-            nbttaglist.a(nbttagcompound1);
-         }
-      }
-
-      nbttagcompound.a("Items", nbttaglist);
-   }
-
-   public int e() {
-      return 64;
-   }
-
-   public int getCookProgressScaled(int i) {
-      return this.coinerCookTime * i / 200;
-   }
-
-   public int getBurnTimeRemainingScaled(int i) {
-      if(this.currentItemBurnTime == 0) {
-         this.currentItemBurnTime = 200;
-      }
-
-      return this.coinerBurnTime * i / this.currentItemBurnTime;
-   }
-
-   public boolean isBurning() {
-      return this.coinerBurnTime > 0;
-   }
-
-   public void b() {
-      boolean flag = this.coinerBurnTime > 0;
-      boolean flag1 = false;
-      if(this.coinerBurnTime > 0) {
-         --this.coinerBurnTime;
-      }
-
-      if(!this.c.I) {
-         if(this.coinerBurnTime == 0 && this.canSmelt()) {
-            this.currentItemBurnTime = this.coinerBurnTime = this.getItemBurnTime(this.coinerItemStacks[2]);
-            if(this.coinerBurnTime > 0) {
-               flag1 = true;
-               if(this.coinerItemStacks[2] != null) {
-                  if(this.coinerItemStacks[2].a().k()) {
-                     this.coinerItemStacks[2] = new dk(this.coinerItemStacks[2].a().j());
-                  } else {
-                     --this.coinerItemStacks[2].a;
-                  }
-
-                  if(this.coinerItemStacks[2].a == 0) {
-                     this.coinerItemStacks[2] = null;
-                  }
-               }
+    public void writeToNBT(NBTTagCompound nbttagcompound)
+    {
+        super.writeToNBT(nbttagcompound);
+        nbttagcompound.setShort("BurnTime", (short)coinerBurnTime);
+        nbttagcompound.setShort("CookTime", (short)coinerCookTime);
+        NBTTagList nbttaglist = new NBTTagList();
+        for(int i = 0; i < coinerItemStacks.length; i++)
+        {
+            if(coinerItemStacks[i] != null)
+            {
+                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+                nbttagcompound1.setByte("Slot", (byte)i);
+                coinerItemStacks[i].writeToNBT(nbttagcompound1);
+                nbttaglist.setTag(nbttagcompound1);
             }
-         }
+        }
 
-         if(this.isBurning() && this.canSmelt()) {
-            ++this.coinerCookTime;
-            if(this.coinerCookTime == 200) {
-               this.coinerCookTime = 0;
-               this.smeltItem();
-               flag1 = true;
+        nbttagcompound.setTag("Items", nbttaglist);
+    }
+
+    public int getInventoryStackLimit()
+    {
+        return 64;
+    }
+
+    public int getCookProgressScaled(int i)
+    {
+        return (coinerCookTime * i) / 200;
+    }
+
+    public int getBurnTimeRemainingScaled(int i)
+    {
+        if(currentItemBurnTime == 0)
+        {
+            currentItemBurnTime = 200;
+        }
+        return (coinerBurnTime * i) / currentItemBurnTime;
+    }
+
+    public boolean isBurning()
+    {
+        return coinerBurnTime > 0;
+    }
+
+    public void updateEntity()
+    {
+        boolean flag = coinerBurnTime > 0;
+        boolean flag1 = false;
+        if(coinerBurnTime > 0)
+        {
+            coinerBurnTime--;
+        }
+        if(!worldObj.multiplayerWorld)
+        {
+            if(coinerBurnTime == 0 && canSmelt())
+            {
+                currentItemBurnTime = coinerBurnTime = getItemBurnTime(coinerItemStacks[2]);
+                if(coinerBurnTime > 0)
+                {
+                    flag1 = true;
+                    if(coinerItemStacks[2] != null)
+                    {
+                        if(coinerItemStacks[2].getItem().hasContainerItem())
+                        {
+                            coinerItemStacks[2] = new ItemStack(coinerItemStacks[2].getItem().getContainerItem());
+                        } else
+                        {
+                            coinerItemStacks[2].stackSize--;
+                        }
+                        if(coinerItemStacks[2].stackSize == 0)
+                        {
+                            coinerItemStacks[2] = null;
+                        }
+                    }
+                }
             }
-         } else {
-            this.coinerCookTime = 0;
-         }
-
-         if(flag != this.coinerBurnTime > 0) {
-            flag1 = true;
-         }
-      }
-
-      if(flag1) {
-         this.h();
-      }
-
-   }
-
-   private boolean canSmelt() {
-      if(this.coinerItemStacks[0] != null && this.coinerItemStacks[1] != null) {
-         dk itemstack = CoinerRecipes.getSmeltingResult(this.coinerItemStacks[0].a().bM, this.coinerItemStacks[1].a().bM);
-         return itemstack == null?false:(this.coinerItemStacks[3] == null?true:(!this.coinerItemStacks[3].a(itemstack)?false:(this.coinerItemStacks[3].a < this.e() && this.coinerItemStacks[3].a < this.coinerItemStacks[1].c()?true:this.coinerItemStacks[3].a < itemstack.c())));
-      } else {
-         return false;
-      }
-   }
-
-   public void smeltItem() {
-      if(this.canSmelt()) {
-         dk itemstack = CoinerRecipes.getSmeltingResult(this.coinerItemStacks[0].a().bM, this.coinerItemStacks[1].a().bM);
-         if(this.coinerItemStacks[3] == null) {
-            this.coinerItemStacks[3] = itemstack.k();
-         } else if(this.coinerItemStacks[3].c == itemstack.c) {
-            ++this.coinerItemStacks[3].a;
-         }
-
-         for(int i = 0; i < 2; ++i) {
-            if(this.coinerItemStacks[i].a().k()) {
-               if(i == 1 && this.coinerItemStacks[1].a().h() && this.coinerItemStacks[1].a().g() > this.coinerItemStacks[1].i()) {
-                  this.coinerItemStacks[1].a(1, (nq)this.entity);
-               } else {
-                  this.coinerItemStacks[i] = new dk(this.coinerItemStacks[i].a().j());
-               }
-            } else {
-               --this.coinerItemStacks[i].a;
+            if(isBurning() && canSmelt())
+            {
+                coinerCookTime++;
+                if(coinerCookTime == 200)
+                {
+                    coinerCookTime = 0;
+                    smeltItem();
+                    flag1 = true;
+                }
+            } else
+            {
+                coinerCookTime = 0;
             }
-
-            if(this.coinerItemStacks[i].a <= 0) {
-               if(i == 1 && this.coinerItemStacks[1].a().h() && this.coinerItemStacks[1].a().g() > this.coinerItemStacks[1].i()) {
-                  this.coinerItemStacks[1].a(1, (nq)this.entity);
-               } else {
-                  this.coinerItemStacks[i] = null;
-               }
+            if(flag != (coinerBurnTime > 0))
+            {
+                flag1 = true;
             }
-         }
+        }
+        if(flag1)
+        {
+            onInventoryChanged();
+        }
+    }
 
-      }
-   }
+    private boolean canSmelt()
+    {
+        if(coinerItemStacks[0] == null || coinerItemStacks[1] == null)
+        {
+            return false;
+        }
+        ItemStack itemstack = CoinerRecipes.getSmeltingResult(coinerItemStacks[0].getItem().shiftedIndex, coinerItemStacks[1].getItem().shiftedIndex);
+        if(itemstack == null)
+        {
+            return false;
+        }
+        if(coinerItemStacks[3] == null)
+        {
+            return true;
+        }
+        if(!coinerItemStacks[3].isItemEqual(itemstack))
+        {
+            return false;
+        }
+        if(coinerItemStacks[3].stackSize < getInventoryStackLimit() && coinerItemStacks[3].stackSize < coinerItemStacks[1].getMaxStackSize())
+        {
+            return true;
+        } else
+        {
+            return coinerItemStacks[3].stackSize < itemstack.getMaxStackSize();
+        }
+    }
 
-   private int getItemBurnTime(dk itemstack) {
-      if(itemstack == null) {
-         return 0;
-      } else {
-         int i = itemstack.a().bM;
-         return i < 256 && yy.k[i].bZ == p.d?300:(i == acy.C.bM?100:(i == acy.l.bM?1600:(i == acy.ax.bM?20000:(i == yy.y.bM?100:0))));
-      }
-   }
+    public void smeltItem()
+    {
+        if(!canSmelt())
+        {
+            return;
+        }
+        ItemStack itemstack = CoinerRecipes.getSmeltingResult(coinerItemStacks[0].getItem().shiftedIndex, coinerItemStacks[1].getItem().shiftedIndex);
+        if(coinerItemStacks[3] == null)
+        {
+            coinerItemStacks[3] = itemstack.copy();
+        } else
+        if(coinerItemStacks[3].itemID == itemstack.itemID)
+        {
+            coinerItemStacks[3].stackSize++;
+        }
+        for(int i = 0; i < 2; i++)
+        {
+            if(coinerItemStacks[i].getItem().hasContainerItem())
+            {
+                if(i == 1 && coinerItemStacks[1].getItem().isDamageable() && coinerItemStacks[1].getItem().getMaxDamage() > coinerItemStacks[1].getItemDamage())
+                {
+                    coinerItemStacks[1].damageItem(1, (EntityLiving)entity);
+                } else
+                {
+                    coinerItemStacks[i] = new ItemStack(coinerItemStacks[i].getItem().getContainerItem());
+                }
+            } else
+            {
+                coinerItemStacks[i].stackSize--;
+            }
+            if(coinerItemStacks[i].stackSize > 0)
+            {
+                continue;
+            }
+            if(i == 1 && coinerItemStacks[1].getItem().isDamageable() && coinerItemStacks[1].getItem().getMaxDamage() > coinerItemStacks[1].getItemDamage())
+            {
+                coinerItemStacks[1].damageItem(1, (EntityLiving)entity);
+            } else
+            {
+                coinerItemStacks[i] = null;
+            }
+        }
 
-   public boolean b_(vi entityplayer) {
-      return this.c.b(this.d, this.e, this.f) != this?false:entityplayer.f((double)this.d + 0.5D, (double)this.e + 0.5D, (double)this.f + 0.5D) <= 64.0D;
-   }
+    }
 
-   public void j() {}
+    private int getItemBurnTime(ItemStack itemstack)
+    {
+        if(itemstack == null)
+        {
+            return 0;
+        }
+        int i = itemstack.getItem().shiftedIndex;
+        if(i < 256 && Block.blocksList[i].blockMaterial == Material.wood)
+        {
+            return 300;
+        }
+        if(i == Item.stick.shiftedIndex)
+        {
+            return 100;
+        }
+        if(i == Item.coal.shiftedIndex)
+        {
+            return 1600;
+        }
+        if(i == Item.bucketLava.shiftedIndex)
+        {
+            return 20000;
+        }
+        return i != Block.sapling.blockID ? 0 : 100;
+    }
 
-   public void k() {}
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    {
+        if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+        {
+            return false;
+        } else
+        {
+            return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
+        }
+    }
+
+    public void openChest()
+    {
+    }
+
+    public void closeChest()
+    {
+    }
 }
