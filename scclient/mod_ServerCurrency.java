@@ -100,7 +100,7 @@ public class mod_ServerCurrency extends NetworkMod
             "# #", " # ", "# #", Character.valueOf('#'), Block.stone
         });
         ModLoader.addRecipe(new ItemStack(ironDie, 1), new Object[] {
-            "# #", " # ", "# #", Character.valueOf('#'), Item.ingotIron
+            "   ", "###", "   ", Character.valueOf('#'), Item.ingotIron
         });
         ModLoader.addRecipe(new ItemStack(diamondDie, 1), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Item.diamond

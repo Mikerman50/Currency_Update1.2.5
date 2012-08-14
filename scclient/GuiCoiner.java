@@ -24,24 +24,24 @@ public class GuiCoiner extends GuiContainer
 
     protected void drawGuiContainerForegroundLayer()
     {
-        fontRenderer.drawString("Coining Mint", 60, 6, 0x404040);
-        fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 0x404040);
+        this.fontRenderer.drawString("Coining Mint", 60, 6, 0x404040);
+        this.fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 0x404040);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3)
     {
-        int k = mc.renderEngine.getTexture("/gui/coiner.png");
+        int var4 = this.mc.renderEngine.getTexture("/gui/coiner.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(k);
-        int l = (width - xSize) / 2;
-        int i1 = (height - ySize) / 2;
-        drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);
+        this.mc.renderEngine.bindTexture(var4);
+        int var5 = (this.width - this.xSize) / 2;
+        int var6 = (this.height - this.ySize) / 2;
+        this.drawTexturedModalRect(var5, var6, 0, 0, this.xSize, this.ySize);
+        int var7;
         if(coinerInventory.isBurning())
         {
-            int j1 = coinerInventory.getBurnTimeRemainingScaled(12);
-            drawTexturedModalRect(j1 + 56, (i1 + 36 + 12) - j1, 176, 12 - j1, 14, j1 + 2);
+            var7 = coinerInventory.getBurnTimeRemainingScaled(12);
+            this.drawTexturedModalRect(var5 + 57, var6 + 45 + 3 - var7, 176, 12 - var7, 14, var7 + 2);
         }
-        int k1 = coinerInventory.getCookProgressScaled(24);
-        drawTexturedModalRect(l + 79, i1 + 34, 176, 14, k1 + 1, 16);
-    }
-}
+        var7 = coinerInventory.getCookProgressScaled(24);
+        this.drawTexturedModalRect(var5 + 79, var6 + 34, 176, 14, var7 + 1, 16);
+    }}
