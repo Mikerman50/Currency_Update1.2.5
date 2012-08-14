@@ -40,7 +40,7 @@ public class BlockCoiner extends BlockContainer
 
     private void setDefaultDirection(World world, int i, int j, int k)
     {
-        if(world.singleplayerWorld)
+        if(world.isRemote)
         {
             return;
         }
@@ -89,7 +89,7 @@ public class BlockCoiner extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.singleplayerWorld)
+        if(world.isRemote)
         {
             return true;
         }

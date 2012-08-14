@@ -3,6 +3,7 @@
 // Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
+import net.minecraft.src.forge.*;
 
 
 // Referenced classes of package net.minecraft.src:
@@ -10,7 +11,7 @@ package net.minecraft.src;
 //            Block, TileEntityCoiner, EntityPlayer, Achievement, 
 //            BlockCoiner
 
-public class mod_ServerCurrency extends BaseModMp
+public class mod_ServerCurrency extends NetworkMod
 {
 
     public static int stoneBlankID;
@@ -41,7 +42,7 @@ public class mod_ServerCurrency extends BaseModMp
 
     public mod_ServerCurrency()
     {
-        ModLoader.RegisterBlock(coiner);
+        ModLoader.registerBlock(coiner);
         stoneBlank.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/blankbronze.png");
         ironBlank.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/blankiron.png");
         goldBlank.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/blankgold.png");
@@ -52,36 +53,36 @@ public class mod_ServerCurrency extends BaseModMp
         stoneDie.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/stonedie.png");
         ironDie.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/irondie.png");
         diamondDie.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/diamonddie.png");
-        ModLoader.AddRecipe(new ItemStack(coiner, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(coiner, 1), new Object[] {
             "WDW", "IPI", "III", Character.valueOf('I'), Item.ingotIron, Character.valueOf('W'), Block.planks, Character.valueOf('P'), Block.pistonBase, Character.valueOf('D'), 
             ironDie
         });
-        ModLoader.AddRecipe(new ItemStack(stoneBlank, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(stoneBlank, 1), new Object[] {
             " C ", "C C", " C ", Character.valueOf('C'), Block.cobblestone
         });
-        ModLoader.AddRecipe(new ItemStack(ironBlank, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(ironBlank, 1), new Object[] {
             " I ", "I I", " I ", Character.valueOf('I'), Item.ingotIron
         });
-        ModLoader.AddRecipe(new ItemStack(goldBlank, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(goldBlank, 1), new Object[] {
             " G ", "G G", " G ", Character.valueOf('G'), Item.ingotGold
         });
-        ModLoader.AddRecipe(new ItemStack(woodDie, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(woodDie, 1), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Block.planks
         });
-        ModLoader.AddRecipe(new ItemStack(stoneDie, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(stoneDie, 1), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Block.cobblestone
         });
-        ModLoader.AddRecipe(new ItemStack(stoneDie, 3), new Object[] {
+        ModLoader.addRecipe(new ItemStack(stoneDie, 3), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Block.stone
         });
-        ModLoader.AddRecipe(new ItemStack(ironDie, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(ironDie, 1), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Item.ingotIron
         });
-        ModLoader.AddRecipe(new ItemStack(diamondDie, 1), new Object[] {
+        ModLoader.addRecipe(new ItemStack(diamondDie, 1), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Item.diamond
         });
-        ModLoader.AddAchievementDesc(currency, "SMP Currency!", "Get Paid.");
-        ModLoader.RegisterTileEntity(net.minecraft.src.TileEntityCoiner.class, "Coining Machine");
+        ModLoader.addAchievementDesc(currency, "SMP Currency!", "Get Paid.");
+        ModLoader.registerTileEntity(net.minecraft.src.TileEntityCoiner.class, "Coining Machine");
     }
 
     public void OnItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
@@ -103,7 +104,7 @@ public class mod_ServerCurrency extends BaseModMp
         }
     }
 
-    public String Version()
+    public String getVersion()
     {
         return "v0.5.2";
     }
@@ -133,4 +134,11 @@ public class mod_ServerCurrency extends BaseModMp
         currency = (new Achievement(3001, "currency", -3, 1, aureus, null)).registerAchievement();
         coiner = (new BlockCoiner(200, false)).setHardness(3F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("coiner");
     }
+
+
+	@Override
+	public void load() {
+		// TODO Auto-generated method stub
+		
+	}
 }

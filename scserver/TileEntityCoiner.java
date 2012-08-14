@@ -108,7 +108,7 @@ public class TileEntityCoiner extends TileEntity
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                 nbttagcompound1.setByte("Slot", (byte)i);
                 coinerItemStacks[i].writeToNBT(nbttagcompound1);
-                nbttaglist.setTag(nbttagcompound1);
+                nbttaglist.appendTag(nbttagcompound1);
             }
         }
 
@@ -147,7 +147,7 @@ public class TileEntityCoiner extends TileEntity
         {
             coinerBurnTime--;
         }
-        if(!worldObj.singleplayerWorld)
+        if(!worldObj.isRemote)
         {
             if(coinerBurnTime == 0 && canSmelt())
             {
@@ -312,4 +312,10 @@ public class TileEntityCoiner extends TileEntity
     public void openChest()
     {
     }
+
+    @Override
+	public ItemStack getStackInSlotOnClosing(int var1) {
+		
+		 return this.coinerItemStacks[var1];
+	}
 }
