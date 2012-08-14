@@ -76,7 +76,7 @@ public class mod_ServerCurrency extends NetworkMod
             "# #", " # ", "# #", Character.valueOf('#'), Block.stone
         });
         ModLoader.addRecipe(new ItemStack(ironDie, 1), new Object[] {
-            "# #", " # ", "# #", Character.valueOf('#'), Item.ingotIron
+        	"   ", "###", "   ", Character.valueOf('#'), Item.ingotIron
         });
         ModLoader.addRecipe(new ItemStack(diamondDie, 1), new Object[] {
             "# #", " # ", "# #", Character.valueOf('#'), Item.diamond
@@ -111,16 +111,16 @@ public class mod_ServerCurrency extends NetworkMod
 
     static 
     {
-        stoneBlankID = 1080;
-        ironBlockID = 1081;
-        goldBlankID = 1082;
-        quincunxID = 1083;
-        denariID = 1084;
-        aureusID = 1085;
-        woodDieID = 1086;
-        stoneDieID = 1087;
-        ironDieID = 1088;
-        diamondDieID = 1089;
+        stoneBlankID = 10800;
+        ironBlockID = 10810;
+        goldBlankID = 10820;
+        quincunxID = 10830;
+        denariID = 10840;
+        aureusID = 10850;
+        woodDieID = 10860;
+        stoneDieID = 10870;
+        ironDieID = 10880;
+        diamondDieID = 10890;
         stoneBlank = (new Item(stoneBlankID + 256)).setItemName("stoneBlank");
         ironBlank = (new Item(ironBlockID + 256)).setItemName("ironBlank");
         goldBlank = (new Item(goldBlankID + 256)).setItemName("goldBlank");
