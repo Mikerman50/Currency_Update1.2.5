@@ -96,8 +96,7 @@ public class BlockCoiner extends BlockContainer
         TileEntityCoiner tileentitycoiner = (TileEntityCoiner)world.getBlockTileEntity(i, j, k);
         if(tileentitycoiner != null)
         {
-            ModLoader.OpenGUI(entityplayer, 98, tileentitycoiner, new ContainerCoiner(entityplayer.inventory, tileentitycoiner));
-        }
+         }
         return true;
     }
 
@@ -129,46 +128,44 @@ public class BlockCoiner extends BlockContainer
 
     public void onBlockRemoval(World world, int i, int j, int k)
     {
-        if(!keepCoinerInventory)
-        {
-            TileEntityCoiner tileentitycoiner = (TileEntityCoiner)world.getBlockTileEntity(i, j, k);
-            if(tileentitycoiner != null)
-            {
-label0:
-                for(int l = 0; l < tileentitycoiner.getSizeInventory(); l++)
-                {
-                    ItemStack itemstack = tileentitycoiner.getStackInSlot(l);
-                    if(itemstack == null)
-                    {
-                        continue;
-                    }
-                    float f = coinerRand.nextFloat() * 0.8F + 0.1F;
-                    float f1 = coinerRand.nextFloat() * 0.8F + 0.1F;
-                    float f2 = coinerRand.nextFloat() * 0.8F + 0.1F;
-                    do
-                    {
-                        if(itemstack.stackSize <= 0)
-                        {
-                            continue label0;
-                        }
-                        int i1 = coinerRand.nextInt(21) + 10;
-                        if(i1 > itemstack.stackSize)
-                        {
-                            i1 = itemstack.stackSize;
-                        }
-                        itemstack.stackSize -= i1;
-                        EntityItem entityitem = new EntityItem(world, (float)i + f, (float)j + f1, (float)k + f2, new ItemStack(itemstack.itemID, i1, itemstack.getItemDamage()));
-                        float f3 = 0.05F;
-                        entityitem.motionX = (float)coinerRand.nextGaussian() * f3;
-                        entityitem.motionY = (float)coinerRand.nextGaussian() * f3 + 0.2F;
-                        entityitem.motionZ = (float)coinerRand.nextGaussian() * f3;
-                        world.entityJoinedWorld(entityitem);
-                    } while(true);
-                }
+     TileEntityCoiner tileentitycoiner = (TileEntityCoiner)world.getBlockTileEntity(i, j, k);
 
+        if (tileentitycoiner != null)
+        {
+            for (int l = 0; l < tileentitycoiner.getSizeInventory(); ++l)
+            {
+                ItemStack itemstack = tileentitycoiner.getStackInSlot(l);
+
+                if (itemstack != null)
+                {
+                    float f = this.coinerRand.nextFloat() * 0.8F + 0.1F;
+                    float f1 = this.coinerRand.nextFloat() * 0.8F + 0.1F;
+                    EntityItem entityitem;
+
+                    for (float f2 = this.coinerRand.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; world.spawnEntityInWorld(entityitem))
+                    {
+                        int i1 = this.coinerRand.nextInt(21) + 10;
+
+                        if (i1 > itemstack.stackSize)
+                        {
+                        	i1 = itemstack.stackSize;
+                        }
+
+                        itemstack.stackSize -= i1;
+                        entityitem = new EntityItem(world, (double)((float)i + f), (double)((float)j + f1), (double)((float)k + f2), new ItemStack(itemstack.itemID, i1, itemstack.getItemDamage()));
+                        float f3 = 0.05F;
+                        entityitem.motionX = (double)((float)this.coinerRand.nextGaussian() * f3);
+                        entityitem.motionY = (double)((float)this.coinerRand.nextGaussian() * f3 + 0.2F);
+                        entityitem.motionZ = (double)((float)this.coinerRand.nextGaussian() * f3);
+
+                        if (itemstack.hasTagCompound())
+                        {
+                        	entityitem.item.setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+                        }
+                    }
+                }
             }
         }
-        super.onBlockRemoval(world, i, j, k);
-    }
 
-}
+        super.onBlockRemoval(world, i, j, k);
+    }}
