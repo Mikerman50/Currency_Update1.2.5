@@ -6,19 +6,24 @@ package net.minecraft.src;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.forge.*;
+import net.minecraft.src.forge.Configuration;
+import java.util.*;
+import java.util.logging.Logger;
+import java.io.*;
+import java.io.IOException;
+import cpw.mods.fml.common.modloader.ModLoaderHelper;
+import java.lang.reflect.Field;
+import java.net.*;
 
 
 
-
-// Referenced classes of package net.minecraft.src:
-//            BaseModMp, ModLoader, Item, ItemStack, 
-//            Block, TileEntityCoiner, ModLoaderMp, EntityPlayer, 
-//            GuiCoiner, EntityPlayerSP, Achievement, BlockCoiner, 
-//            GuiScreen
 
 public class mod_ServerCurrency extends NetworkMod
 {
-
+    public static String modName = "Server Currency";
+    public static String versionNumber = "0.52 MCPC";
+    public static Logger logger = Logger.getLogger("Minecraft");
+    public static mod_ServerCurrency instance;
     public static int stoneBlankID;
     public static int ironBlockID;
     public static int goldBlankID;
@@ -42,18 +47,21 @@ public class mod_ServerCurrency extends NetworkMod
     public static final Item ironDie;
     public static final Item diamondDie;
     public static final Block coiner;
-    public static final String version = "v0.5.2";
+    
+    public String Version()
+    {
+        return versionNumber;
+    }
     public static final Achievement currency;
     public static int coinfront = ModLoader.addOverride("/terrain.png", "/ServerCurrency/Coiner/coinidle.png");
-  	public static mod_ServerCurrency instance;
         
       	public mod_ServerCurrency()
         {
          instance = this;
         }
-      	
-
-    public void load()
+      	public void load()
+      	{
+      
     {
         ModLoader.registerBlock(coiner);
         ModLoader.addName(dupondius, "Quincunx");
@@ -106,8 +114,8 @@ public class mod_ServerCurrency extends NetworkMod
             "# #", " # ", "# #", Character.valueOf('#'), Item.diamond
         });
         ModLoader.addAchievementDesc(currency, "SMP Currency!", "Get Paid.");
-        ModLoader.registerTileEntity(net.minecraft.src.TileEntityCoiner.class, "Coiner");
-        MinecraftForge.setGuiHandler(instance, new GuiHandlerCurrency());
+        ModLoader.registerTileEntity(TileEntityCoiner.class, "Coiner");
+        MinecraftForge.setGuiHandler(instance, new GuiHandlerCurrency());}
  //       ModLoader.RegisterGUI(this, coinerGUI);
     }
 
@@ -133,7 +141,7 @@ public class mod_ServerCurrency extends NetworkMod
 
     public String getVersion()
     {
-        return "v0.5.2";
+        return versionNumber;
     }
 
     static 
@@ -161,4 +169,12 @@ public class mod_ServerCurrency extends NetworkMod
         currency = (new Achievement(3001, "currency", -3, 1, aureus, null)).registerAchievement();
         coiner = (new BlockCoiner(200, false)).setHardness(3F).setResistance(5F).setStepSound(Block.soundStoneFootstep).setBlockName("coiner");
     }
+public boolean clientSideRequired() 
+{
+return true;
 }
+
+public boolean serverSideRequired() 
+{
+return false;
+}}

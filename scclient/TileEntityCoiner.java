@@ -19,7 +19,9 @@ public class TileEntityCoiner extends TileEntity
     public int coinerBurnTime;
     public int currentItemBurnTime;
     public int coinerCookTime;
-    public Entity entity;
+    public EntityPlayer entity;
+    public EntityPlayer player;
+    
 
     public TileEntityCoiner()
     {

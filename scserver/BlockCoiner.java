@@ -96,6 +96,7 @@ public class BlockCoiner extends BlockContainer
         TileEntityCoiner tileentitycoiner = (TileEntityCoiner)world.getBlockTileEntity(i, j, k);
         if(tileentitycoiner != null)
         {
+        	entityplayer.openGui(mod_ServerCurrency.instance, 145, world, i, j, k);            
          }
         return true;
     }

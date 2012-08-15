@@ -3,6 +3,14 @@
 // Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
+
+import java.util.logging.Logger;
+
+import java.util.*;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.net.*;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.forge.*;
 
 
@@ -11,9 +19,14 @@ import net.minecraft.src.forge.*;
 //            Block, TileEntityCoiner, EntityPlayer, Achievement, 
 //            BlockCoiner
 
+
+
 public class mod_ServerCurrency extends NetworkMod
 {
-
+	public static String modName = "Server Currency";
+	public static String versionNumber = "0.52 MCPC";
+	public static Logger logger = Logger.getLogger("Minecraft");
+    public static mod_ServerCurrency instance;
     public static int stoneBlankID;
     public static int ironBlockID;
     public static int goldBlankID;
@@ -41,6 +54,9 @@ public class mod_ServerCurrency extends NetworkMod
     public static int coinfront = ModLoader.addOverride("/terrain.png", "/ServerCurrency/Coiner/coinidle.png");
 
     public mod_ServerCurrency()
+    {
+     instance = this;
+    }
     {
         ModLoader.registerBlock(coiner);
         stoneBlank.iconIndex = ModLoader.addOverride("/gui/items.png", "/ServerCurrency/blankbronze.png");
@@ -83,6 +99,8 @@ public class mod_ServerCurrency extends NetworkMod
         });
         ModLoader.addAchievementDesc(currency, "SMP Currency!", "Get Paid.");
         ModLoader.registerTileEntity(net.minecraft.src.TileEntityCoiner.class, "Coining Machine");
+        ModLoader.registerTileEntity(TileEntityCoiner.class, "Coiner");
+        MinecraftForge.setGuiHandler(instance, new GuiHandlerCurrency());
     }
 
     public void OnItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
@@ -106,7 +124,7 @@ public class mod_ServerCurrency extends NetworkMod
 
     public String getVersion()
     {
-        return "v0.5.2";
+        return versionNumber;
     }
 
     static 
@@ -140,5 +158,13 @@ public class mod_ServerCurrency extends NetworkMod
 	public void load() {
 		// TODO Auto-generated method stub
 		
-	}
+	}public boolean clientSideRequired() 
+	 {
+	 return true;
+	 }
+
+	 public boolean serverSideRequired() 
+	 {
+	 return false;
+	 }
 }
